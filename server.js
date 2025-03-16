@@ -116,7 +116,7 @@ dotenv.config();
 const app = express();
 
 const allowedOrigins = [
-  "https://word-frontend-rosy.vercel.app",
+  "https://word-manager.vercel.app",
   "https://word-frontend-git-main-khmiqs-projects.vercel.app",
   "https://word-frontend-w171cpsuu-khmiqs-projects.vercel.app",
 ];
