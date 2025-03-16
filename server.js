@@ -6,11 +6,26 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
+const cors = require("cors");
+
+const allowedOrigins = [
+  "https://word-frontend-rosy.vercel.app",
+  "https://word-frontend-git-main-khmiqs-projects.vercel.app",
+  "https://word-frontend-w171cpsuu-khmiqs-projects.vercel.app",
+];
+
 const corsOptions = {
-  origin: "https://word-frontend-rosy.vercel.app", // Replace with your frontend URL
-  methods: "GET,POST,PUT,DELETE",
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  methods: "GET, POST, PUT, DELETE, PATCH",
   allowedHeaders: "Content-Type",
 };
+
 app.use(cors(corsOptions));
 app.use(express.json());
 
