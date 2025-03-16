@@ -6,7 +6,12 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
-app.use(cors());
+const corsOptions = {
+  origin: "https://word-frontend-rosy.vercel.app", // Replace with your frontend URL
+  methods: "GET,POST,PUT,DELETE",
+  allowedHeaders: "Content-Type",
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Connect to MongoDB
