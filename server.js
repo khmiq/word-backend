@@ -6,7 +6,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const app = express();
-const cors = require("cors");
 
 const allowedOrigins = [
   "https://word-frontend-rosy.vercel.app",
@@ -14,26 +13,28 @@ const allowedOrigins = [
   "https://word-frontend-w171cpsuu-khmiqs-projects.vercel.app",
 ];
 
-const corsOptions = {
-  origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: "GET, POST, PUT, DELETE, PATCH",
-  allowedHeaders: "Content-Type",
-};
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: "GET, POST, PUT, DELETE, PATCH",
+    allowedHeaders: "Content-Type",
+  })
+);
 
-app.use(cors(corsOptions));
 app.use(express.json());
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGO_URI || "mongodb://localhost:27017/wordsDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose
+  .connect(process.env.MONGO_URI || "mongodb://localhost:27017/wordsDB", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log("Database connection error:", err));
 
@@ -70,33 +71,20 @@ app.post("/words", async (req, res) => {
 });
 
 // Update a word
-// app.put("/words/:id", async (req, res) => {
-//   const { id } = req.params;
-//   const { text } = req.body;
-
-//   if (!text) return res.status(400).json({ message: "Word is required" });
-
-//   try {
-//     const updatedWord = await Word.findByIdAndUpdate(id, { text }, { new: true });
-//     if (!updatedWord) return res.status(404).json({ message: "Word not found" });
-//     res.json({ message: "Word updated successfully", word: updatedWord });
-//   } catch (error) {
-//     res.status(500).json({ message: "Error updating word", error: error.message });
-//   }
-// });
 app.patch("/words/:id", async (req, res) => {
-    const { id } = req.params;
-    const { word } = req.body;
-  
-    try {
-      const updatedWord = await Word.findByIdAndUpdate(id, { word }, { new: true });
-      if (!updatedWord) return res.status(404).json({ error: "Word not found" });
-      res.json(updatedWord);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  });
-  
+  const { id } = req.params;
+  const { text } = req.body;
+
+  if (!text) return res.status(400).json({ message: "Word is required" });
+
+  try {
+    const updatedWord = await Word.findByIdAndUpdate(id, { text }, { new: true });
+    if (!updatedWord) return res.status(404).json({ message: "Word not found" });
+    res.json({ message: "Word updated successfully", word: updatedWord });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating word", error: error.message });
+  }
+});
 
 // Delete a word
 app.delete("/words/:id", async (req, res) => {
@@ -114,4 +102,4 @@ app.delete("/words/:id", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 
-export default app
+module.exports = app;
