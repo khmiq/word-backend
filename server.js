@@ -73,7 +73,7 @@ app.post("/words", async (req, res) => {
 // Update a word
 app.patch("/words/:id", async (req, res) => {
   const { id } = req.params;
-  const { text } = req.body;
+  const { text } = req.body;  // It expects a 'text' field
 
   if (!text) return res.status(400).json({ message: "Word is required" });
 
@@ -85,6 +85,7 @@ app.patch("/words/:id", async (req, res) => {
     res.status(500).json({ message: "Error updating word", error: error.message });
   }
 });
+
 
 // Delete a word
 app.delete("/words/:id", async (req, res) => {
