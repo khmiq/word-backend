@@ -31,7 +31,7 @@ app.use(express.json());
 
 
 mongoose
-  .connect(process.env.MONGO_URI || "mongodb://localhost:27017/wordsDB", {
+  .connect(process.env.MONGO_URI,  { dbName: "your_db" } || "mongodb://localhost:27017/wordsDB", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
