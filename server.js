@@ -37,6 +37,9 @@ mongoose
   })
   .then(() => console.log("MongoDB connected"))
   .catch((err) => console.log("Database connection error:", err));
+mongoose.connection.once("open", () => {
+  console.log(`Connected to database: ${mongoose.connection.name}`);
+});
 
 
 const wordSchema = new mongoose.Schema({ text: { type: String, unique: true, required: true } });
